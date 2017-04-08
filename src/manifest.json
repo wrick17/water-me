@@ -1,7 +1,8 @@
 {
   "name": "Water me!!",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "manifest_version": 2,
+  "options_page": "options.html",
   "description": "I will force you to drink water",
   "browser_action": {
     "default_title": "Water Force Reminder!"
@@ -15,5 +16,8 @@
       "css": ["style.css"],
       "js": ["water_content.js"]
     }
+  ],
+  "web_accessible_resources": [
+    "water.jpg"
   ]
 }
