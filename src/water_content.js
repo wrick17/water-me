@@ -139,7 +139,6 @@ function init() {
   });
 
 }
-chrome.storage.local.clear();
 
 buildOverlay();
 init();
