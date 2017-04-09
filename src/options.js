@@ -6,33 +6,21 @@ var defaultBlockDuration = 1;
 function loadOptions() {
 	 chrome.storage.local.get("settings", function(showObj){
 
-    var triggerInterval = showObj.triggerInterval;
+		 console.log(showObj);
+
+    var triggerInterval = showObj.settings.triggerInterval;
     if (!triggerInterval) {
       triggerInterval = defaultTriggerInterval;
     }
 
-    var blockDuration = showObj.defaultBlockDuration;
+    var blockDuration = showObj.settings.blockDuration;
     if (!blockDuration) {
       blockDuration = defaultBlockDuration;
     }
 
-    var select = document.getElementById("triggerInterval");
-    for (var i = 0; i < select.children.length; i++) {
-      var child = select.children[i];
-        if (child.value == triggerInterval) {
-        child.selected = "true";
-        break;
-      }
-    }
+		document.getElementById("triggerInterval").value = triggerInterval;
 
-    var select = document.getElementById("blockDuration");
-    for (var i = 0; i < select.children.length; i++) {
-      var child = select.children[i];
-        if (child.value == blockDuration) {
-        child.selected = "true";
-        break;
-      }
-    }
+		document.getElementById("blockDuration").value = blockDuration;
 
   })
 }
@@ -42,10 +30,11 @@ document.getElementById("saveButton").addEventListener("click",function() {
   var extensionStorageShow ={};
 
 	var select1 = document.getElementById("triggerInterval");
-	extensionStorageShow.triggerInterval = select1.children[select1.selectedIndex].value;
+	console.log(select1.value);
+	extensionStorageShow.triggerInterval = select1.value;
 
   var select2 = document.getElementById("blockDuration");
-  extensionStorageShow.blockDuration = select2.children[select2.selectedIndex].value;
+  extensionStorageShow.blockDuration = select2.value;
 
 
 	var extensionStorage = {

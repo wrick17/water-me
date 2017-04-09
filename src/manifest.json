@@ -1,6 +1,6 @@
 {
   "name": "Water me!!",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "manifest_version": 2,
   "options_page": "options.html",
   "description": "I will force you to drink water",
