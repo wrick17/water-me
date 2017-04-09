@@ -13,7 +13,6 @@
 }
 
 .water-dialog-box {
-  background: white;
   width: 95%;
   height: 95vh;
   max-width: 700px;
@@ -23,11 +22,16 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  padding: 30px;
+  padding:20px;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
-.water-dialog-box h1 {
-  font-size: 92px;
+.water-dialog-box #waterText {
+  max-width:300px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  line-height: 30px;
 }
 
 .water-dialog-box h2 {
