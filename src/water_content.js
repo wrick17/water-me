@@ -186,6 +186,6 @@ function init() {
 
 }
 
-chrome.storage.local.clear();
+// chrome.storage.local.clear();
 buildOverlay();
 init();
