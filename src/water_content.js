@@ -1,11 +1,14 @@
 // config
 var show = 'drinkTimerShow';
 var hide = 'drinkTimerHide';
+// var timeoutMultiplier = 2000;
+// var hideTimeoutMultiplier = 5000;
 var timeoutMultiplier = 60*60*1000;
 var hideTimeoutMultiplier = 60*1000;
 var timeout = timeoutMultiplier*1;
 var hideTimeout = hideTimeoutMultiplier*1;
 var intervalTimeout = 1000;
+var counterInterval;
 var quotes = [
   "In wine there is wisdom, in beer there is freedom, in water there is bacteria.",
   "It seems difficult to drink 8 glasses of water a day but easy to drink 8 mugs of beer in 2 hours",
@@ -36,9 +39,17 @@ function buildOverlay() {
   heading.innerHTML = quotes[quoteIndex];
   heading.id ='waterText';
 
+  var button = document.createElement('button');
+  button.id = 'okay';
+  button.innerHTML = 'I promise, I drank water!';
+
+  var timer = document.createElement('div');
+  timer.id = 'timer';
+
   dialog.appendChild(heading);
 
   overlay.appendChild(dialog);
+  overlay.appendChild(button);
 
   document.querySelector('body').appendChild(overlay);
 }
@@ -50,6 +61,38 @@ function showOverlay() {
 
 function hideOverlay() {
   document.getElementById('water').style.display = 'none';
+}
+
+function zeroPad(val) {
+  val = Number(val);
+  return (val>9 ? val : '0'+val).toString();
+}
+
+function hideButton(time) {
+  var temptime = (new Date(time)).getTime();
+  counterInterval = setInterval(function() {
+    var now = new Date();
+    var timer = temptime-now;
+    if (timer < 0) {
+      clearInterval(counterInterval);
+      return;
+    }
+    var timerArr = (timer/1000).toString().split('.');
+    document.getElementById('okay').innerHTML = zeroPad(timerArr[0])+':'+zeroPad(timerArr[1]);
+  }, 10);
+}
+
+function showButton(callback) {
+  clearInterval(counterInterval);
+  function handler(e) {
+    hideOverlay();
+    callback();
+  }
+
+  var button = document.getElementById('okay');
+  button.innerHTML = 'I promise, I drank water!';
+  button.removeEventListener('click', handler);
+  button.addEventListener('click', handler);
 }
 
 function setTime()  {
@@ -106,6 +149,7 @@ function init() {
 
               if (hideObj[hide] > now) {
                 if (!overlayShown) {
+                  hideButton(hideObj[hide]);
                   showOverlay();
                   overlayShown = true;
                 }
@@ -113,20 +157,22 @@ function init() {
                 return init();
               } else {
                 if (overlayShown) {
-                  hideOverlay();
-                  overlayShown = false;
+                  return showButton(function() {
+                    overlayShown = false;
+                    setTime();
+                  });
                 }
-                return setTime();
               }
 
             })
           } else {
             intervalTimeout = showObj[show] - now;
-              if (overlayShown) {
-                hideOverlay();
+            if (overlayShown) {
+              showButton(function() {
                 overlayShown = false;
-              }
-            return init();
+                return init();
+              });
+            }
           }
         } else {
           return setTime();
@@ -140,5 +186,6 @@ function init() {
 
 }
 
+chrome.storage.local.clear();
 buildOverlay();
 init();
