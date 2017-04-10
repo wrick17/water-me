@@ -1,8 +1,9 @@
 // config
 var show = 'drinkTimerShow';
 var hide = 'drinkTimerHide';
-// var timeoutMultiplier = 2000;
-// var hideTimeoutMultiplier = 5000;
+// var timeoutMultiplier = 1000;
+// var hideTimeoutMultiplier = 2000;
+// chrome.storage.local.clear();
 var timeoutMultiplier = 60*60*1000;
 var hideTimeoutMultiplier = 60*1000;
 var timeout = timeoutMultiplier*1;
@@ -84,11 +85,14 @@ function hideButton(time) {
 
 function showButton(callback) {
   clearInterval(counterInterval);
+  if (!overlayShown) {
+    callback();
+  }
+
   function handler(e) {
     hideOverlay();
     callback();
   }
-
   var button = document.getElementById('okay');
   button.innerHTML = 'I promise, I drank water!';
   button.removeEventListener('click', handler);
@@ -141,7 +145,6 @@ function init() {
       chrome.storage.local.get(show, function(showObj) {
 
         if (showObj.hasOwnProperty(show)) {
-
           var now = Date.now();
 
           if (showObj[show] < now) {
@@ -156,12 +159,10 @@ function init() {
                 intervalTimeout = 1000;
                 return init();
               } else {
-                if (overlayShown) {
-                  return showButton(function() {
-                    overlayShown = false;
-                    setTime();
-                  });
-                }
+                return showButton(function() {
+                  overlayShown = false;
+                  setTime();
+                });
               }
 
             })
@@ -186,6 +187,5 @@ function init() {
 
 }
 
-// chrome.storage.local.clear();
 buildOverlay();
 init();
