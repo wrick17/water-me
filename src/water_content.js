@@ -2,10 +2,10 @@
 var show = 'drinkTimerShow';
 var hide = 'drinkTimerHide';
 var timeoutMultiplier = 60*60*1000;
-var hideTimeoutMultiplier = 1000;
+var hideTimeoutMultiplier = 60*1000;
 var timeout = timeoutMultiplier*1;
 var hideTimeout = hideTimeoutMultiplier*1;
-var intervalTimeout = 100;
+var intervalTimeout = 1000;
 var quotes = [
   "In wine there is wisdom, in beer there is freedom, in water there is bacteria.",
   "It seems difficult to drink 8 glasses of water a day but easy to drink 8 mugs of beer in 2 hours",
@@ -109,7 +109,7 @@ function init() {
                   showOverlay();
                   overlayShown = true;
                 }
-                intervalTimeout = 100;
+                intervalTimeout = 1000;
                 return init();
               } else {
                 if (overlayShown) {
