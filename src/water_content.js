@@ -20,6 +20,11 @@ var quotes = [
   "Drink plenty of water. Dehydration can get ugly",
   "Your body is more around 60% water. Be more than half full"
 ];
+var buttonQuotes = [
+  "I promise, I drank water",
+  "Pinky swear, I drank water",
+  "I know, just go now"
+];
 
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -94,7 +99,7 @@ function showButton(callback) {
     callback();
   }
   var button = document.getElementById('okay');
-  button.innerHTML = 'I promise, I drank water!';
+  button.innerHTML = buttonQuotes[getRandomInt(0, buttonQuotes.length-1)];
   button.removeEventListener('click', handler);
   button.addEventListener('click', handler);
 }
