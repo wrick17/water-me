@@ -2,7 +2,7 @@
 var show = 'drinkTimerShow';
 var hide = 'drinkTimerHide';
 // var timeoutMultiplier = 1000;
-// var hideTimeoutMultiplier = 2000;
+// var hideTimeoutMultiplier = 5000;
 // chrome.storage.local.clear();
 var timeoutMultiplier = 60*60*1000;
 var hideTimeoutMultiplier = 60*1000;
@@ -83,8 +83,10 @@ function hideButton(time) {
       clearInterval(counterInterval);
       return;
     }
-    var timerArr = (timer/1000).toString().split('.');
-    document.getElementById('okay').innerHTML = zeroPad(timerArr[0])+':'+zeroPad(timerArr[1]);
+    timer = parseInt(timer/1000);
+    var minutes = parseInt(timer/60);
+    var seconds = parseInt(timer%60);
+    document.getElementById('okay').innerHTML = zeroPad(minutes)+':'+zeroPad(seconds);
   }, 10);
 }
 
@@ -106,7 +108,7 @@ function showButton(callback) {
 
 function setTime()  {
   var now = Date.now();
-  intervalTimeout = timeout;
+  intervalTimeout = Math.min(timeout, 1000);
 
   var storeShow = {};
   storeShow[show] = now + timeout;
@@ -144,10 +146,8 @@ function init() {
   setSettings(function() {
 
     loop = setTimeout(function() {
-
-      console.log('i am running');
-
       chrome.storage.local.get(show, function(showObj) {
+        // console.log('i am running', new Date(showObj[show]));
 
         if (showObj.hasOwnProperty(show)) {
           var now = Date.now();
@@ -172,13 +172,13 @@ function init() {
 
             })
           } else {
-            intervalTimeout = showObj[show] - now;
-            if (overlayShown) {
-              showButton(function() {
-                overlayShown = false;
-                return init();
-              });
-            }
+            intervalTimeout = Math.min((showObj[show] - now), 1000);
+            showButton(function() {
+              if (overlayShown) {
+                  overlayShown = false;
+                  return init();
+              }
+            });
           }
         } else {
           return setTime();
